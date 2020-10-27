@@ -1,0 +1,16 @@
+*.iml
+*/*.iml
+.svn/
+.idea
+.idea/
+.idea/*
+*.idea/
+*.idea/*
+log/
+.DS_Store
+out/
+*/out/
+target/*
+target/
+*/target/
+*/target/*

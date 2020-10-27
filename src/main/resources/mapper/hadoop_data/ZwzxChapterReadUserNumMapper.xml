@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iwanvi.bigdata.inter.dao.hadoop_data.ZwzxChapterReadUserNumMapper">
+  <resultMap id="BaseResultMap" type="com.iwanvi.bigdata.inter.domain.hadoop_data.ZwzxChapterReadUserNum">
+    <result column="book_id" jdbcType="VARCHAR" property="bookId" />
+    <result column="book_name" jdbcType="VARCHAR" property="bookName" />
+    <result column="chapter_num" jdbcType="VARCHAR" property="chapterNum" />
+    <result column="read_num" jdbcType="BIGINT" property="readNum" />
+    <result column="dt" jdbcType="VARCHAR" property="dt" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+      book_id, book_name, chapter_num, read_num, dt
+   </sql>
+
+  <select id="selectByPage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from  zwzx_chapter_read_user_num
+    <where>
+      <if test="bookId != null and bookId != ''">
+        and book_id = #{bookId}
+      </if>
+      <choose>
+        <when test="bookName != null and bookName != ''">
+          and book_name = #{bookName}
+        </when>
+        <otherwise>
+          and book_name != ''
+        </otherwise>
+      </choose>
+      <if test="startTime != null and startTime != ''">
+        and dt <![CDATA[ >= ]]>  #{startTime}
+      </if>
+      <if test="endTime != null and endTime != ''">
+        and dt <![CDATA[ <= ]]>  #{endTime}
+      </if>
+    </where>
+    order by dt DESC, CONVERT(chapter_num, UNSIGNED INTEGER) ASC
+    <if test="pageSize != 0">
+      limit #{startPage},#{pageSize}
+    </if>
+  </select>
+
+  <select id="selectCount" resultType="Integer">
+    select
+    count(1)
+    from zwzx_chapter_read_user_num
+    <where>
+      <if test="bookId != null and bookId != ''">
+        and book_id = #{bookId}
+      </if>
+      <choose>
+        <when test="bookName != null and bookName != ''">
+          and book_name = #{bookName}
+        </when>
+        <otherwise>
+          and book_name != ''
+        </otherwise>
+      </choose>
+      <if test="startTime != null and startTime != ''">
+        and dt <![CDATA[ >= ]]>  #{startTime}
+      </if>
+      <if test="endTime != null and endTime != ''">
+        and dt <![CDATA[ <= ]]>  #{endTime}
+      </if>
+    </where>
+  </select>
+
+
+  <select id="selectChapterNumByPage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from  zwzx_chapter_read_user_num
+    <where>
+      <if test="bookId != null and bookId != ''">
+        and book_id = #{bookId}
+      </if>
+      <choose>
+        <when test="bookName != null and bookName != ''">
+          and book_name = #{bookName}
+        </when>
+        <otherwise>
+          and book_name != ''
+        </otherwise>
+      </choose>
+      <if test="startTime != null and startTime != ''">
+        and dt <![CDATA[ >= ]]>  #{startTime}
+      </if>
+      <if test="endTime != null and endTime != ''">
+        and dt <![CDATA[ <= ]]>  #{endTime}
+      </if>
+      <if test="begChap != null and begChap >= 0">
+        and chapter_num <![CDATA[ >= ]]>  #{begChap}
+      </if>
+      <if test="endChap != null and endChap >= 0">
+        and chapter_num <![CDATA[ <= ]]>  #{endChap}
+      </if>
+    </where>
+    order by dt DESC, CONVERT(chapter_num, UNSIGNED INTEGER) ASC
+    <if test="pageSize != 0">
+      limit #{startPage},#{pageSize}
+    </if>
+  </select>
+
+  <select id="selectChapterNumCount" resultType="Integer">
+    SELECT COUNT(*) FROM
+    (
+    select
+    dt
+    from zwzx_chapter_read_user_num
+    <where>
+      <if test="bookId != null and bookId != ''">
+        and book_id = #{bookId}
+      </if>
+      <choose>
+        <when test="bookName != null and bookName != ''">
+          and book_name = #{bookName}
+        </when>
+        <otherwise>
+          and book_name != ''
+        </otherwise>
+      </choose>
+      <if test="startTime != null and startTime != ''">
+        and dt <![CDATA[ >= ]]>  #{startTime}
+      </if>
+      <if test="endTime != null and endTime != ''">
+        and dt <![CDATA[ <= ]]>  #{endTime}
+      </if>
+      <if test="begChap != null and begChap >= 0">
+        and chapter_num <![CDATA[ >= ]]>  #{begChap}
+      </if>
+      <if test="endChap != null and endChap >= 0">
+        and chapter_num <![CDATA[ <= ]]>  #{endChap}
+      </if>
+    </where>
+    group by book_id, dt
+    ) a
+  </select>
+
+
+</mapper>

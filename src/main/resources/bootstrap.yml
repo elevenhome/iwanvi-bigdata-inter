@@ -1,0 +1,45 @@
+server:
+  port: 8080 #端口号
+
+spring:
+  application:
+    name: iwanvi-bigdata-inter
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  # 多数据源配置
+  datasource:
+    hadoopdata:
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      initialize: true
+      name: hadoop_data
+      url: jdbc:mysql://dbmaster.dsj.cread.com:3306/hadoop_data?useUnicode=true&characterEncoding=utf-8&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2b8&zeroDateTimeBehavior=convertToNull
+      username: hadoop
+      password: analysis@jb
+      initial-size: 5
+      max-active: 50
+      min-idle: 5
+      max-wait: 8000
+      test-while-idle: true
+      validation-query: 'select 1 from dual'
+      connect-timeout: 1500
+  servlet:
+    multipart:
+      # 上传一个文件最大值,默认1Mb
+      max-file-size: 10MB
+      # 上传多个文件最大值,100Mb,默认10Mb
+      max-request-size: 100MB
+
+  # 线程池配置
+  thread-pool:
+    default:
+      corePoolSize: 8
+      maximumPoolSize: 12
+      keepAliveTime: 3500
+      queueCapacity: 1024000
+    redis:
+      corePoolSize: 5
+      maximumPoolSize: 5
+      keepAliveTime: 1000
+      queueCapacity: 102400

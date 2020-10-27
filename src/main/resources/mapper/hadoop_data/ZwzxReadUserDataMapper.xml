@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iwanvi.bigdata.inter.dao.hadoop_data.ZwzxReadUserDataMapper">
+  <resultMap id="BaseResultMap" type="com.iwanvi.bigdata.inter.domain.hadoop_data.ZwzxReadUserData">
+    <result column="book_id" jdbcType="VARCHAR" property="bookId" />
+    <result column="book_name" jdbcType="VARCHAR" property="bookName" />
+    <result column="read_user" jdbcType="BIGINT" property="readUser" />
+    <result column="old_user" jdbcType="BIGINT" property="oldUser" />
+    <result column="chapter_num" jdbcType="BIGINT" property="chapterNum" />
+    <result column="read_duration" jdbcType="DOUBLE" property="readDuration" />
+    <result column="dt" jdbcType="VARCHAR" property="dt" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+      book_id, book_name, read_user, old_user, chapter_num, read_duration, dt
+  </sql>
+
+  <select id="selectByPage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from  zwzx_read_user_data
+    <where>
+      <if test="bookId != null and bookId != ''">
+        and book_id = #{bookId}
+      </if>
+      <choose>
+        <when test="bookName != null and bookName != ''">
+          and book_name = #{bookName}
+        </when>
+        <otherwise>
+          and book_name != ''
+        </otherwise>
+      </choose>
+      <if test="startTime != null and startTime != ''">
+        and dt <![CDATA[ >= ]]>  #{startTime}
+      </if>
+      <if test="endTime != null and endTime != ''">
+        and dt <![CDATA[ <= ]]>  #{endTime}
+      </if>
+    </where>
+    order by dt DESC, read_user DESC
+    <if test="pageSize != 0">
+      limit #{startPage},#{pageSize}
+    </if>
+  </select>
+
+  <select id="selectCount" resultType="Integer">
+    select
+    count(1)
+    from zwzx_read_user_data
+    <where>
+      <if test="bookId != null and bookId != ''">
+        and book_id = #{bookId}
+      </if>
+      <choose>
+        <when test="bookName != null and bookName != ''">
+          and book_name = #{bookName}
+        </when>
+        <otherwise>
+          and book_name != ''
+        </otherwise>
+      </choose>
+      <if test="startTime != null and startTime != ''">
+        and dt <![CDATA[ >= ]]>  #{startTime}
+      </if>
+      <if test="endTime != null and endTime != ''">
+        and dt <![CDATA[ <= ]]>  #{endTime}
+      </if>
+    </where>
+  </select>
+
+
+</mapper>
